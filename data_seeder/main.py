@@ -65,7 +65,7 @@ def generate_and_insert_events():
 
 # Scheduler setup
 scheduler = BackgroundScheduler()
-scheduler.add_job(generate_and_insert_events, 'interval', minutes=1)
+scheduler.add_job(generate_and_insert_events, 'interval', minutes=5)
 scheduler.start()
 
 @app.get("/")
