@@ -1,0 +1,7 @@
+{
+  "bigquery": {
+    "credentials_file": "gcp-cred.json",
+    "scopes": ["https://www.googleapis.com/auth/cloud-platform"],
+    "table_id": "project_id.dataset.table_id"
+  }
+}

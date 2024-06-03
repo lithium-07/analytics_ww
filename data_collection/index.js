@@ -78,7 +78,7 @@ async function handleEvent(event, sessionId, platform, additionalData = {}) {
 }
 
 register(async ({ analytics, browser }) => {
-  analytics.subscribe("pageScroll", async (event) => {
+  analytics.subscribe("page_scroll", async (event) => {
     const sessionId = await getSessionId(browser);
     const platform = isMobile(event.context.navigator.userAgent)
       ? "mobile"
