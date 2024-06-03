@@ -2,81 +2,115 @@
   {
     "name": "platform",
     "type": "STRING",
-    "mode": "NULLABLE"
+    "mode": "NULLABLE",
+    "description": "Platform from which the event was triggered"
   },
   {
     "name": "event_time",
     "type": "TIMESTAMP",
-    "mode": "REQUIRED"
+    "mode": "REQUIRED",
+    "description": "Timestamp of when the event occurred"
   },
   {
     "name": "event_name",
     "type": "STRING",
-    "mode": "REQUIRED"
+    "mode": "REQUIRED",
+    "description": "Name of the event"
   },
   {
     "name": "event_id",
     "type": "STRING",
-    "mode": "REQUIRED"
+    "mode": "REQUIRED",
+    "description": "Unique identifier for the event"
   },
   {
     "name": "user_id",
     "type": "STRING",
-    "mode": "NULLABLE"
+    "mode": "NULLABLE",
+    "description": "Unique identifier for the user"
   },
   {
     "name": "session_id",
     "type": "STRING",
-    "mode": "NULLABLE"
+    "mode": "NULLABLE",
+    "description": "Unique identifier for the session"
   },
   {
     "name": "page_url",
     "type": "STRING",
-    "mode": "NULLABLE"
+    "mode": "NULLABLE",
+    "description": "URL of the page where the event occurred"
   },
   {
     "name": "order_id",
     "type": "STRING",
-    "mode": "NULLABLE"
+    "mode": "NULLABLE",
+    "description": "Unique identifier for the order"
   },
   {
     "name": "order_value",
     "type": "FLOAT",
-    "mode": "NULLABLE"
+    "mode": "NULLABLE",
+    "description": "Value of the order"
   },
   {
     "name": "city",
     "type": "STRING",
-    "mode": "NULLABLE"
+    "mode": "NULLABLE",
+    "description": "City from which the event was triggered"
   },
   {
     "name": "country",
     "type": "STRING",
-    "mode": "NULLABLE"
+    "mode": "NULLABLE",
+    "description": "Country from which the event was triggered"
   },
   {
     "name": "user_agent",
     "type": "STRING",
-    "mode": "NULLABLE"
+    "mode": "NULLABLE",
+    "description": "User agent of the device used"
   },
   {
     "name": "language",
     "type": "STRING",
-    "mode": "NULLABLE"
+    "mode": "NULLABLE",
+    "description": "Language preference of the user"
   },
   {
     "name": "currency",
     "type": "STRING",
-    "mode": "NULLABLE"
+    "mode": "NULLABLE",
+    "description": "Currency used for the transaction"
   },
   {
     "name": "user_email",
     "type": "STRING",
-    "mode": "NULLABLE"
+    "mode": "NULLABLE",
+    "description": "Email of the user"
   },
   {
     "name": "percent_scroll",
     "type": "FLOAT",
-    "mode": "NULLABLE"
+    "mode": "NULLABLE",
+    "description": "Percentage of the page scrolled"
+  },
+  {
+    "name": "product_id",
+    "type": "STRING",
+    "mode": "NULLABLE",
+    "description": "Unique identifier for the product"
+  },
+  {
+    "name": "product_price",
+    "type": "FLOAT",
+    "mode": "NULLABLE",
+    "description": "Price of the product"
+  },
+  {
+    "name": "page_title",
+    "type": "STRING",
+    "mode": "NULLABLE",
+    "description": "Title of the page where the event occurred"
   }
 ]
