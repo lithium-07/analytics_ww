@@ -1,4 +1,4 @@
-Use uvicorn main:app --relaod to run it locally.
+Use uvicorn main:app --reload to run it locally.
 
 This will need a gcp-cred.json file to connect. This file can be obtained from:
 console.cloud.google.com -> api and services -> credentials
