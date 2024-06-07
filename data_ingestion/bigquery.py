@@ -1,9 +1,12 @@
+import asyncio
 from datetime import datetime
 from google.cloud import bigquery
 from google.oauth2 import service_account
 import json
-from classes import EventPayload
+from classes import EventPayload, MetricsRequest, MetricsResponse
 from fastapi import HTTPException
+from utils import get_add_to_cart_events, get_checkout_completed_events, get_number_of_sessions, get_total_revenue
+
 
 def load_config(section: str):
     with open('config.json', 'r') as f:
@@ -11,24 +14,29 @@ def load_config(section: str):
     return config.get(section, {})
 
 
+config = load_config(section='bigquery')
+bqcreds = service_account.Credentials.from_service_account_file(
+    config['credentials_file'],
+    scopes=config['scopes']
+)
+client = bigquery.Client(credentials=bqcreds, project=bqcreds.project_id)
+dataset_id = config['dataset_id']
+add_to_cart_table_id = ".".join(dataset_id, config['add_to_cart_table'])
+sessions_table_id = ".".join(dataset_id, config['sessions_table'])
+checkout_completed_table_id = ".".join(dataset_id, config['checkout_completed_table'])
+revenue_table_id = ".".join(dataset_id, config['revenue_table'])
+scroll_table_id = ".".join(dataset_id, config['scroll_values_table'])
+base_table_id = ".".join(dataset_id, config['base_table'])
+
 def write_event_bigquery(event_payload: EventPayload):
     try:
-        config = load_config(section='bigquery')
-
-        bqcreds = service_account.Credentials.from_service_account_file(
-            config['credentials_file'],
-            scopes=config['scopes']
-        )
-        client = bigquery.Client(credentials=bqcreds, project=bqcreds.project_id)
-
         transformed_payload = event_payload.model_dump()
         event_timestamp: datetime = transformed_payload['event_time']
         transformed_payload['event_time'] = event_timestamp.isoformat()
 
         rows_to_insert = [transformed_payload]
-        table_id = config['table_id']
 
-        table = client.get_table(table_id)
+        table = client.get_table(base_table_id)
         errors = client.insert_rows_json(table, rows_to_insert)
 
         if errors:
@@ -38,3 +46,111 @@ def write_event_bigquery(event_payload: EventPayload):
         print(e)
         raise HTTPException(status_code=500, detail=str(e))
 
+
+
+def get_bigquery_metrics(request: MetricsRequest) -> MetricsResponse:
+    page_url = request.page_url
+    start_date = request.start_date
+    end_date = request.end_date
+
+    try:
+        # Validate dates
+        start_date = datetime.strptime(start_date, "%Y-%m-%d")
+        end_date = datetime.strptime(end_date, "%Y-%m-%d")
+    except ValueError:
+        raise HTTPException(status_code=400, detail="Invalid date format. Use YYYY-MM-DD.")
+
+    # Query to get the required data from BigQuery
+    query = f"""
+    SELECT
+        a.page_url,
+        SUM(a.add_to_cart_events) AS add_to_cart_events,
+        SUM(b.checkout_completed_events) AS checkout_completed_events,
+        SUM(c.number_of_sessions) AS number_of_sessions,
+        SUM(d.total_revenue) AS total_revenue
+    FROM
+        `{add_to_cart_table_id}` a
+    JOIN
+        `{checkout_completed_table_id}` b
+    ON
+        a.page_url = b.page_url AND a.event_date = b.event_date
+    JOIN
+        `{sessions_table_id}` c
+    ON
+        a.page_url = c.page_url AND a.event_date = c.event_date
+    JOIN
+        `{revenue_table_id}` d
+    ON
+        a.page_url = d.page_url AND a.event_date = d.event_date
+    WHERE
+        a.page_url = '{page_url}'
+        AND a.event_date BETWEEN '{start_date.strftime('%Y-%m-%d')}' AND '{end_date.strftime('%Y-%m-%d')}'
+    GROUP BY
+        a.page_url
+    """
+
+    query_job = client.query(query)
+    results = list(query_job.result())
+
+    if not results:
+        raise HTTPException(status_code=404, detail="No data found for the given page URL and date range.")
+
+    result = results[0]
+
+    # Compute the metrics
+    add_to_cart_events = result['add_to_cart_events']
+    checkout_completed_events = result['checkout_completed_events']
+    number_of_sessions = result['number_of_sessions']
+    total_revenue = result['total_revenue']
+
+    cart_percentage = (add_to_cart_events / number_of_sessions) * 100 if number_of_sessions else 0
+    conversion_rate = (checkout_completed_events / add_to_cart_events) * 100 if add_to_cart_events else 0
+    average_order_value = total_revenue / checkout_completed_events if checkout_completed_events else 0
+    revenue_per_session = total_revenue / number_of_sessions if number_of_sessions else 0
+    return MetricsResponse(
+        page_url=page_url,
+        cart_percentage=cart_percentage,
+        converstion_rate=conversion_rate, 
+        average_order_value=average_order_value,
+        revenue_per_session=revenue_per_session,
+        total_sessions=number_of_sessions
+    )
+
+
+async def get_bigquery_metrics_parallel(request: MetricsRequest) -> MetricsResponse:
+    page_url = request.page_url
+    start_date = request.start_date
+    end_date = request.end_date
+
+    try:
+        # Validate dates
+        start_date = datetime.strptime(start_date, "%Y-%m-%d")
+        end_date = datetime.strptime(end_date, "%Y-%m-%d")
+    except ValueError:
+        raise HTTPException(status_code=400, detail="Invalid date format. Use YYYY-MM-DD.")
+
+    start_date_str = start_date.strftime('%Y-%m-%d')
+    end_date_str = end_date.strftime('%Y-%m-%d')
+
+    # Run queries concurrently
+    add_to_cart_events, checkout_completed_events, number_of_sessions, total_revenue = await asyncio.gather(
+        get_add_to_cart_events(page_url, start_date_str, end_date_str, client),
+        get_checkout_completed_events(page_url, start_date_str, end_date_str, client),
+        get_number_of_sessions(page_url, start_date_str, end_date_str, client),
+        get_total_revenue(page_url, start_date_str, end_date_str, client)
+    )
+
+    # Compute the metrics
+    cart_percentage = (add_to_cart_events / number_of_sessions) * 100 if number_of_sessions else 0
+    conversion_rate = (checkout_completed_events / number_of_sessions) * 100 if number_of_sessions else 0
+    average_order_value = total_revenue / checkout_completed_events if checkout_completed_events else 0
+    revenue_per_session = total_revenue / number_of_sessions if number_of_sessions else 0
+
+    return MetricsResponse(
+        page_url=page_url,
+        cart_percentage=cart_percentage,
+        conversion_rate=conversion_rate,
+        average_order_value=average_order_value,
+        revenue_per_session=revenue_per_session,
+        total_sessions=number_of_sessions
+    )

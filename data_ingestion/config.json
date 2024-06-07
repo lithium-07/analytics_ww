@@ -2,6 +2,12 @@
   "bigquery": {
     "credentials_file": "gcp-cred.json",
     "scopes": ["https://www.googleapis.com/auth/cloud-platform"],
-    "table_id": "project_id.dataset.table_id"
+    "dataset_id": "project_id.dataset",
+    "base_table": "base_table_name",
+    "add_to_cart_table": "add_to_cart",
+    "checkout_completed_table": "checkout_completed",
+    "sessions_table": "sessions",
+    "revenue_table": "total_revenue",
+    "scroll_values_table": "scroll"
   }
 }

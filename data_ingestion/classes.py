@@ -21,3 +21,15 @@ class EventPayload(BaseModel):
     user_email: Optional[str] = Field(None, example="user@example.com")
     percent_scroll: Optional[float] = Field(None, example=75)
 
+class MetricsRequest(BaseModel):
+    page_url: str
+    start_date: str
+    end_date: str
+
+class MetricsResponse(BaseModel):
+    page_url: str
+    cart_percentage: float
+    conversion_rate: float
+    average_order_value: float
+    revenue_per_session: float
+    total_sessions: int
