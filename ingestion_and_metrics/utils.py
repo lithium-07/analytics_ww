@@ -2,7 +2,7 @@ import asyncio
 from concurrent.futures import ThreadPoolExecutor
 import logging
 from google.cloud import bigquery
-from bigquery import checkout_completed_table_id, add_to_cart_table_id, sessions_table_id, revenue_table_id, scroll_table_id
+from config import checkout_completed_table_id, add_to_cart_table_id, sessions_table_id, revenue_table_id, scroll_table_id
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)

@@ -2,31 +2,17 @@ import asyncio
 from datetime import datetime
 from google.cloud import bigquery
 from google.oauth2 import service_account
-import json
 from classes import EventPayload, MetricsRequest, MetricsResponse
 from fastapi import HTTPException
 from utils import get_add_to_cart_events, get_checkout_completed_events, get_number_of_sessions, get_total_revenue, get_scroll_events
+from config import creds, scopes, base_table_id, add_to_cart_table_id, checkout_completed_table_id, sessions_table_id, scroll_table_id, revenue_table_id
 
-
-def load_config(section: str):
-    with open('config.json', 'r') as f:
-        config = json.load(f)
-    return config.get(section, {})
-
-
-config = load_config(section='bigquery')
 bqcreds = service_account.Credentials.from_service_account_file(
-    config['credentials_file'],
-    scopes=config['scopes']
+    creds,
+    scopes=scopes
 )
 client = bigquery.Client(credentials=bqcreds, project=bqcreds.project_id)
-dataset_id = config['dataset_id']
-add_to_cart_table_id = ".".join(dataset_id, config['add_to_cart_table'])
-sessions_table_id = ".".join(dataset_id, config['sessions_table'])
-checkout_completed_table_id = ".".join(dataset_id, config['checkout_completed_table'])
-revenue_table_id = ".".join(dataset_id, config['revenue_table'])
-scroll_table_id = ".".join(dataset_id, config['scroll_values_table'])
-base_table_id = ".".join(dataset_id, config['base_table'])
+
 
 def write_event_bigquery(event_payload: EventPayload):
     try:
