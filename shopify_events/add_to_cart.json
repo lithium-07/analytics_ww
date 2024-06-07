@@ -1,0 +1,94 @@
+{
+    "id": "sh-a9338f24-C6F2-4D9E-1CE3-57ADD8CADAFE",
+    "name": "product_added_to_cart",
+    "data": {
+        "cartLine": {
+            "cost": {
+                "totalAmount": {
+                    "amount": 629.95,
+                    "currencyCode": "INR"
+                }
+            },
+            "merchandise": {
+                "id": "45347676094621",
+                "image": {
+                    "src": "https://cdn.shopify.com/s/files/1/0664/4387/0365/files/Main_9129b69a-0c7b-4f66-b6cf-c4222f18028a.jpg?v=1716349735"
+                },
+                "price": {
+                    "amount": 629.95,
+                    "currencyCode": "INR"
+                },
+                "product": {
+                    "id": "8256537723037",
+                    "title": "The Multi-managed Snowboard",
+                    "vendor": "Multi-managed Vendor",
+                    "type": "snowboard",
+                    "untranslatedTitle": "The Multi-managed Snowboard",
+                    "url": "/products/the-multi-managed-snowboard?variant=45347676094621"
+                },
+                "sku": "sku-managed-1",
+                "title": null,
+                "untranslatedTitle": null
+            },
+            "quantity": 1
+        }
+    },
+    "type": "standard",
+    "clientId": "4f373bba-9df3-4aba-b3e9-eb6a2f872859",
+    "timestamp": "2024-05-24T06:04:34.198Z",
+    "context": {
+        "document": {
+            "location": {
+                "href": "https://wordsworth-trial.myshopify.com/products/the-multi-managed-snowboard",
+                "hash": "",
+                "host": "wordsworth-trial.myshopify.com",
+                "hostname": "wordsworth-trial.myshopify.com",
+                "origin": "https://wordsworth-trial.myshopify.com",
+                "pathname": "/products/the-multi-managed-snowboard",
+                "port": "",
+                "protocol": "https:",
+                "search": ""
+            },
+            "referrer": "https://wordsworth-trial.myshopify.com/",
+            "characterSet": "UTF-8",
+            "title": "The Multi-managed Snowboard – wordsworth-trial"
+        },
+        "navigator": {
+            "language": "en-US",
+            "cookieEnabled": true,
+            "languages": [
+                "en-US",
+                "en"
+            ],
+            "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"
+        },
+        "window": {
+            "innerHeight": 934,
+            "innerWidth": 1396,
+            "outerHeight": 1055,
+            "outerWidth": 1920,
+            "pageXOffset": 0,
+            "pageYOffset": 0,
+            "location": {
+                "href": "https://wordsworth-trial.myshopify.com/products/the-multi-managed-snowboard",
+                "hash": "",
+                "host": "wordsworth-trial.myshopify.com",
+                "hostname": "wordsworth-trial.myshopify.com",
+                "origin": "https://wordsworth-trial.myshopify.com",
+                "pathname": "/products/the-multi-managed-snowboard",
+                "port": "",
+                "protocol": "https:",
+                "search": ""
+            },
+            "origin": "https://wordsworth-trial.myshopify.com",
+            "screen": {
+                "height": 1080,
+                "width": 1920
+            },
+            "screenX": 1470,
+            "screenY": 25,
+            "scrollX": 0,
+            "scrollY": 0
+        }
+    }
+}

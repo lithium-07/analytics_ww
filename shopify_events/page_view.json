@@ -1,0 +1,62 @@
+{
+    "id": "sh-a201aa83-8009-44AA-541A-1561846EA363",
+    "name": "page_viewed",
+    "type": "standard",
+    "clientId": "4f373bba-9df3-4aba-b3e9-eb6a2f872859",
+    "timestamp": "2024-05-22T20:32:48.802Z",
+    "context": {
+        "document": {
+            "location": {
+                "href": "https://wordsworth-trial.myshopify.com/products/the-3p-fulfilled-snowboard",
+                "hash": "",
+                "host": "wordsworth-trial.myshopify.com",
+                "hostname": "wordsworth-trial.myshopify.com",
+                "origin": "https://wordsworth-trial.myshopify.com",
+                "pathname": "/products/the-3p-fulfilled-snowboard",
+                "port": "",
+                "protocol": "https:",
+                "search": ""
+            },
+            "referrer": "https://wordsworth-trial.myshopify.com/collections/all",
+            "characterSet": "UTF-8",
+            "title": "The 3p Fulfilled Snowboard – wordsworth-trial"
+        },
+        "navigator": {
+            "language": "en-US",
+            "cookieEnabled": true,
+            "languages": [
+                "en-US",
+                "en"
+            ],
+            "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"
+        },
+        "window": {
+            "innerHeight": 713,
+            "innerWidth": 946,
+            "outerHeight": 834,
+            "outerWidth": 1470,
+            "pageXOffset": 0,
+            "pageYOffset": 0,
+            "location": {
+                "href": "https://wordsworth-trial.myshopify.com/products/the-3p-fulfilled-snowboard",
+                "hash": "",
+                "host": "wordsworth-trial.myshopify.com",
+                "hostname": "wordsworth-trial.myshopify.com",
+                "origin": "https://wordsworth-trial.myshopify.com",
+                "pathname": "/products/the-3p-fulfilled-snowboard",
+                "port": "",
+                "protocol": "https:",
+                "search": ""
+            },
+            "origin": "https://wordsworth-trial.myshopify.com",
+            "screen": {
+                "height": 956,
+                "width": 1470
+            },
+            "screenX": 0,
+            "screenY": 37,
+            "scrollX": 0,
+            "scrollY": 0
+        }
+    }
+}

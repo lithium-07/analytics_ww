@@ -1,0 +1,195 @@
+{
+    "id": "sh-a637288a-2BFD-449D-055F-051AEC5EECB2",
+    "name": "checkout_completed",
+    "data": {
+        "checkout": {
+            "buyerAcceptsEmailMarketing": false,
+            "buyerAcceptsSmsMarketing": false,
+            "attributes": [
+                {
+                    "key": "from",
+                    "value": "new-customer-accounts",
+                    "__typename": "NoteAttribute"
+                }
+            ],
+            "billingAddress": {
+                "address1": "102, Block 5 Harmony, Suncity apartments, Sarjapura outer ring road junction, Iblur village",
+                "city": "Bangalore",
+                "country": "IN",
+                "countryCode": "IN",
+                "firstName": "Bhavesh",
+                "lastName": "Tolia",
+                "province": "KA",
+                "provinceCode": "KA",
+                "zip": "560102"
+            },
+            "token": "6f5d44a080a2095bb10d4d181c557f0b",
+            "currencyCode": "INR",
+            "discountApplications": [],
+            "email": "bhavesh.ntolia@gmail.com",
+            "lineItems": [
+                {
+                    "discountAllocations": [],
+                    "id": "45347676094621",
+                    "quantity": 2,
+                    "title": "The Multi-managed Snowboard",
+                    "variant": {
+                        "id": "45347676094621",
+                        "image": {
+                            "src": "https://cdn.shopify.com/s/files/1/0664/4387/0365/files/Main_9129b69a-0c7b-4f66-b6cf-c4222f18028a_64x64.jpg?v=1716349735"
+                        },
+                        "price": {
+                            "amount": 629.95,
+                            "currencyCode": "INR"
+                        },
+                        "product": {
+                            "id": "8256537723037",
+                            "title": "The Multi-managed Snowboard",
+                            "vendor": "Multi-managed Vendor",
+                            "type": "snowboard",
+                            "untranslatedTitle": "The Multi-managed Snowboard",
+                            "url": "/products/the-multi-managed-snowboard"
+                        },
+                        "sku": "sku-managed-1",
+                        "untranslatedTitle": ""
+                    },
+                    "finalLinePrice": {
+                        "amount": 1259.9,
+                        "currencyCode": "INR"
+                    }
+                },
+                {
+                    "discountAllocations": [],
+                    "id": "45347676291229",
+                    "quantity": 1,
+                    "title": "The Collection Snowboard: Liquid",
+                    "variant": {
+                        "id": "45347676291229",
+                        "image": {
+                            "src": "https://cdn.shopify.com/s/files/1/0664/4387/0365/files/Main_b13ad453-477c-4ed1-9b43-81f3345adfd6_64x64.jpg?v=1716349737"
+                        },
+                        "price": {
+                            "amount": 749.95,
+                            "currencyCode": "INR"
+                        },
+                        "product": {
+                            "id": "8256537821341",
+                            "title": "The Collection Snowboard: Liquid",
+                            "vendor": "Hydrogen Vendor",
+                            "type": "snowboard",
+                            "untranslatedTitle": "The Collection Snowboard: Liquid",
+                            "url": "/products/the-collection-snowboard-liquid"
+                        },
+                        "untranslatedTitle": ""
+                    },
+                    "finalLinePrice": {
+                        "amount": 749.95,
+                        "currencyCode": "INR"
+                    }
+                }
+            ],
+            "order": {
+                "customer": {
+                    "id": "7171098280093"
+                },
+                "id": "5213803675805"
+            },
+            "shippingAddress": {
+                "address1": "102, Block 5 Harmony, Suncity apartments, Sarjapura outer ring road junction, Iblur village",
+                "city": "Bangalore",
+                "country": "IN",
+                "countryCode": "IN",
+                "firstName": "Bhavesh",
+                "lastName": "Tolia",
+                "province": "KA",
+                "provinceCode": "KA",
+                "zip": "560102"
+            },
+            "subtotalPrice": {
+                "amount": 2009.85,
+                "currencyCode": "INR"
+            },
+            "shippingLine": {
+                "price": {
+                    "amount": 0,
+                    "currencyCode": "INR"
+                }
+            },
+            "totalTax": {
+                "amount": 361.78,
+                "currencyCode": "INR"
+            },
+            "totalPrice": {
+                "amount": 2371.63,
+                "currencyCode": "INR"
+            },
+            "transactions": [
+                {
+                    "amount": {
+                        "amount": 25.2,
+                        "currencyCode": "GBP"
+                    },
+                    "gateway": "shopify_payments"
+                }
+            ]
+        }
+    },
+    "type": "standard",
+    "clientId": "4f373bba-9df3-4aba-b3e9-eb6a2f872859",
+    "timestamp": "2024-05-23T16:09:15.696Z",
+    "context": {
+        "document": {
+            "location": {
+                "href": "https://wordsworth-trial.myshopify.com/checkouts/cn/Z2NwLWFzaWEtc291dGhlYXN0MTowMUhZSzNDRlpHOEVURFpNQlZKQUNGRkpGNA/thank-you",
+                "hash": "",
+                "host": "wordsworth-trial.myshopify.com",
+                "hostname": "wordsworth-trial.myshopify.com",
+                "origin": "https://wordsworth-trial.myshopify.com",
+                "pathname": "/checkouts/cn/Z2NwLWFzaWEtc291dGhlYXN0MTowMUhZSzNDRlpHOEVURFpNQlZKQUNGRkpGNA/thank-you",
+                "port": "",
+                "protocol": "https:",
+                "search": ""
+            },
+            "referrer": "https://wordsworth-trial.myshopify.com/cart?checkout%5Bshipping_address%5D%5Baddress1%5D=102%2C+Block+5+Harmony%2C+Suncity+apartments%2C+Sarjapura+outer+ring+road+junction%2C+Iblur+village&checkout%5Bshipping_address%5D%5Bcity%5D=Bangalore&checkout%5Bshipping_address%5D%5Bcountry%5D=India&checkout%5Bshipping_address%5D%5Bfirst_name%5D=Bhavesh&checkout%5Bshipping_address%5D%5Blast_name%5D=Tolia&checkout%5Bshipping_address%5D%5Bprovince%5D=Karnataka&checkout%5Bshipping_address%5D%5Bzip%5D=560102",
+            "characterSet": "UTF-8",
+            "title": "Checkout - wordsworth-trial"
+        },
+        "navigator": {
+            "language": "en-US",
+            "cookieEnabled": true,
+            "languages": [
+                "en-US",
+                "en"
+            ],
+            "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"
+        },
+        "window": {
+            "innerHeight": 849,
+            "innerWidth": 1354,
+            "outerHeight": 970,
+            "outerWidth": 1878,
+            "pageXOffset": 0,
+            "pageYOffset": 0,
+            "location": {
+                "href": "https://wordsworth-trial.myshopify.com/checkouts/cn/Z2NwLWFzaWEtc291dGhlYXN0MTowMUhZSzNDRlpHOEVURFpNQlZKQUNGRkpGNA/thank-you",
+                "hash": "",
+                "host": "wordsworth-trial.myshopify.com",
+                "hostname": "wordsworth-trial.myshopify.com",
+                "origin": "https://wordsworth-trial.myshopify.com",
+                "pathname": "/checkouts/cn/Z2NwLWFzaWEtc291dGhlYXN0MTowMUhZSzNDRlpHOEVURFpNQlZKQUNGRkpGNA/thank-you",
+                "port": "",
+                "protocol": "https:",
+                "search": ""
+            },
+            "origin": "https://wordsworth-trial.myshopify.com",
+            "screen": {
+                "height": 1080,
+                "width": 1920
+            },
+            "screenX": 1470,
+            "screenY": 25,
+            "scrollX": 0,
+            "scrollY": 0
+        }
+    }
+}
