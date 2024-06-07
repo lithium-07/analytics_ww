@@ -130,13 +130,15 @@ async def get_bigquery_metrics_parallel(request: MetricsRequest) -> MetricsRespo
     end_date_str = end_date.strftime('%Y-%m-%d')
 
     # Run queries concurrently
-    add_to_cart_events, checkout_completed_events, number_of_sessions, total_revenue, (total_scroll_sum, total_scroll_events) = await asyncio.gather(
+    add_to_cart_events, checkout_completed_events, number_of_sessions, total_revenue, scroll_events = await asyncio.gather(
         get_add_to_cart_events(page_url, start_date_str, end_date_str, client),
         get_checkout_completed_events(page_url, start_date_str, end_date_str, client),
         get_number_of_sessions(page_url, start_date_str, end_date_str, client),
         get_total_revenue(page_url, start_date_str, end_date_str, client),
         get_scroll_events(page_url, start_date_str, end_date_str, client)
     )
+    total_scroll_sum = scroll_events[0]
+    total_scroll_events = scroll_events[1]
 
     # Compute the metrics
     cart_percentage = (add_to_cart_events / number_of_sessions) * 100 if number_of_sessions else 0
