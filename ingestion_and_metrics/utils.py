@@ -71,3 +71,16 @@ async def get_add_to_cart_events(page_url: str, start_date: str, end_date: str, 
     except Exception as e:
         logger.exception(f"Failed to run query for add to cart events between {start_date} and {end_date} for {page_url}", e)
         return 0
+    
+async def get_scroll_events(page_url: str, start_date: str, end_date: str, client: bigquery.Client):
+    try:
+        query = f"""
+        SELECT SUM(total_scroll_sum) AS total_scroll_sum, SUM(total_events) AS total_scroll_events
+        FROM `{scroll_table_id}`
+        WHERE page_url = '{page_url}' AND event_date BETWEEN '{start_date}' AND '{end_date}'
+        """
+        result = await loop.run_in_executor(executor, run_query, query, client)
+        return result[0]['total_scroll_sum'], result[0]['total_scroll_events'] if result else 0, 0
+    except Exception as e:
+        logger.exception(f"Failed to run query for add to cart events between {start_date} and {end_date} for {page_url}", e)
+        return 0, 0

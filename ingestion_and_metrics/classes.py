@@ -33,3 +33,4 @@ class MetricsResponse(BaseModel):
     average_order_value: float
     revenue_per_session: float
     total_sessions: int
+    average_scroll_percentage: float

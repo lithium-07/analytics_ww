@@ -5,7 +5,7 @@ from google.oauth2 import service_account
 import json
 from classes import EventPayload, MetricsRequest, MetricsResponse
 from fastapi import HTTPException
-from utils import get_add_to_cart_events, get_checkout_completed_events, get_number_of_sessions, get_total_revenue
+from utils import get_add_to_cart_events, get_checkout_completed_events, get_number_of_sessions, get_total_revenue, get_scroll_events
 
 
 def load_config(section: str):
@@ -67,7 +67,9 @@ def get_bigquery_metrics(request: MetricsRequest) -> MetricsResponse:
         SUM(a.add_to_cart_events) AS add_to_cart_events,
         SUM(b.checkout_completed_events) AS checkout_completed_events,
         SUM(c.number_of_sessions) AS number_of_sessions,
-        SUM(d.total_revenue) AS total_revenue
+        SUM(d.total_revenue) AS total_revenue,
+        SUM(e.total_scroll_sum) AS total_scroll_sum, 
+        SUM(e.total_events) AS total_scroll_events
     FROM
         `{add_to_cart_table_id}` a
     JOIN
@@ -82,6 +84,10 @@ def get_bigquery_metrics(request: MetricsRequest) -> MetricsResponse:
         `{revenue_table_id}` d
     ON
         a.page_url = d.page_url AND a.event_date = d.event_date
+    JOIN
+        `{scroll_table_id}` e
+    ON
+        a.page_url = e.page_url AND a.event_date = e.event_date
     WHERE
         a.page_url = '{page_url}'
         AND a.event_date BETWEEN '{start_date.strftime('%Y-%m-%d')}' AND '{end_date.strftime('%Y-%m-%d')}'
@@ -102,18 +108,23 @@ def get_bigquery_metrics(request: MetricsRequest) -> MetricsResponse:
     checkout_completed_events = result['checkout_completed_events']
     number_of_sessions = result['number_of_sessions']
     total_revenue = result['total_revenue']
+    total_scroll_sum = result['total_scroll_sum']
+    total_scroll_events = result['total_scroll_events']
 
     cart_percentage = (add_to_cart_events / number_of_sessions) * 100 if number_of_sessions else 0
     conversion_rate = (checkout_completed_events / add_to_cart_events) * 100 if add_to_cart_events else 0
     average_order_value = total_revenue / checkout_completed_events if checkout_completed_events else 0
     revenue_per_session = total_revenue / number_of_sessions if number_of_sessions else 0
+    average_scroll_percentage = total_scroll_sum / total_scroll_events if total_scroll_events else 0
+
     return MetricsResponse(
         page_url=page_url,
         cart_percentage=cart_percentage,
         converstion_rate=conversion_rate, 
         average_order_value=average_order_value,
         revenue_per_session=revenue_per_session,
-        total_sessions=number_of_sessions
+        total_sessions=number_of_sessions,
+        average_scroll_percentage=average_scroll_percentage
     )
 
 
@@ -133,11 +144,12 @@ async def get_bigquery_metrics_parallel(request: MetricsRequest) -> MetricsRespo
     end_date_str = end_date.strftime('%Y-%m-%d')
 
     # Run queries concurrently
-    add_to_cart_events, checkout_completed_events, number_of_sessions, total_revenue = await asyncio.gather(
+    add_to_cart_events, checkout_completed_events, number_of_sessions, total_revenue, (total_scroll_sum, total_scroll_events) = await asyncio.gather(
         get_add_to_cart_events(page_url, start_date_str, end_date_str, client),
         get_checkout_completed_events(page_url, start_date_str, end_date_str, client),
         get_number_of_sessions(page_url, start_date_str, end_date_str, client),
-        get_total_revenue(page_url, start_date_str, end_date_str, client)
+        get_total_revenue(page_url, start_date_str, end_date_str, client),
+        get_scroll_events(page_url, start_date_str, end_date_str, client)
     )
 
     # Compute the metrics
@@ -145,6 +157,7 @@ async def get_bigquery_metrics_parallel(request: MetricsRequest) -> MetricsRespo
     conversion_rate = (checkout_completed_events / number_of_sessions) * 100 if number_of_sessions else 0
     average_order_value = total_revenue / checkout_completed_events if checkout_completed_events else 0
     revenue_per_session = total_revenue / number_of_sessions if number_of_sessions else 0
+    average_scroll_percentage = total_scroll_sum / total_scroll_events if total_scroll_events else 0
 
     return MetricsResponse(
         page_url=page_url,
@@ -152,5 +165,6 @@ async def get_bigquery_metrics_parallel(request: MetricsRequest) -> MetricsRespo
         conversion_rate=conversion_rate,
         average_order_value=average_order_value,
         revenue_per_session=revenue_per_session,
-        total_sessions=number_of_sessions
+        total_sessions=number_of_sessions,
+        average_scroll_percentage=average_scroll_percentage
     )
