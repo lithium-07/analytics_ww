@@ -7,9 +7,14 @@ SCHEDULER_DURATION = 1
 app = FastAPI()
 
 # Scheduler setup
-scheduler = BackgroundScheduler()
-scheduler.add_job(generate_and_insert_events, 'interval', minutes=SCHEDULER_DURATION)
-scheduler.start()
+def schedule_queries():
+    scheduler = BackgroundScheduler()
+    scheduler.add_job(generate_and_insert_events, 'interval', minutes=SCHEDULER_DURATION)
+    scheduler.start()
+
+@app.on_event("startup")
+async def startup_event():
+    schedule_queries()
 
 @app.get("/")
 def read_root():
