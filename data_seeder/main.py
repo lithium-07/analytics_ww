@@ -4,19 +4,20 @@ from google.cloud import bigquery
 from google.oauth2 import service_account
 import random
 import string
-from datetime import datetime
+from datetime import datetime, timedelta
+import time
 
 app = FastAPI()
 
 # Path to your service account key file
-key_path = "gcp-creds.json"
+key_path = "creds.json"
 
 # Load credentials from the key file
 credentials = service_account.Credentials.from_service_account_file(key_path)
 
 # BigQuery configuration
-dataset_id = 'dataset_id'
-table_id = 'table_id'
+dataset_id = ''
+table_id = ''
 client = bigquery.Client(credentials=credentials, project=credentials.project_id)
 
 # Helper function to create random event data
@@ -24,15 +25,16 @@ def create_event(event_type):
     user_agent = ''.join(random.choices(string.ascii_letters + string.digits, k=15))
     is_mobile_device = random.choice([True, False])
     platform = 'mobile' if is_mobile_device else 'web'
-
+    random_int = random.randint(0,45)
+    random_event_time = datetime.now() - timedelta(days=random_int)
     base_event = {
         'platform': platform,
-        'event_time': datetime.now().isoformat(),
+        'event_time': random_event_time.isoformat(),
         'event_name': event_type,
         'event_id': ''.join(random.choices(string.ascii_letters + string.digits, k=10)),
         'user_id': ''.join(random.choices(string.ascii_letters + string.digits, k=10)),
         'session_id': f'sess-{"".join(random.choices(string.ascii_letters + string.digits, k=10))}',
-        'page_url': 'https://example.com',
+        'page_url': f'https://example-{random_int}.com',
         'user_agent': user_agent,
         'language': 'en-US',
     }
@@ -50,8 +52,17 @@ def create_event(event_type):
 
 # Function to insert data into BigQuery
 def insert_data(event_data):
+    print("Starting data insertion")
+    
     table = client.dataset(dataset_id).table(table_id)
+    
+    start_time = time.perf_counter()
     errors = client.insert_rows_json(table, event_data)
+    end_time = time.perf_counter()
+    
+    time_taken = end_time - start_time
+    print(f"Time taken for data insertion: {time_taken:.6f} seconds")
+    
     if errors:
         print('Errors:', errors)
     else:
@@ -60,12 +71,12 @@ def insert_data(event_data):
 # Function to generate and insert events
 def generate_and_insert_events():
     event_types = ['page_viewed', 'page_scroll', 'product_added_to_cart', 'checkout_completed']
-    event_data = [create_event(random.choice(event_types)) for _ in range(100)]
+    event_data = [create_event(random.choice(event_types)) for _ in range(5000)]
     insert_data(event_data)
 
 # Scheduler setup
 scheduler = BackgroundScheduler()
-scheduler.add_job(generate_and_insert_events, 'interval', minutes=5)
+scheduler.add_job(generate_and_insert_events, 'interval', minutes=1)
 scheduler.start()
 
 @app.get("/")
