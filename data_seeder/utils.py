@@ -1,10 +1,13 @@
+import logging
 from google.cloud import bigquery
 from google.oauth2 import service_account
 import random
 import string
 from datetime import datetime, timedelta
-import time
 import json
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 NUMBER_OF_EVENTS_TO_GENERATE = 5000
 
@@ -57,16 +60,11 @@ def create_event(event_type):
 # Function to insert data into BigQuery
 def insert_data(event_data):
     table = client.dataset(dataset_id).table(table_id)
-    start_time = time.perf_counter()
-    errors = client.insert_rows_json(table, event_data)
-    end_time = time.perf_counter()
-    time_taken = end_time - start_time
-    print(f"Time taken for data insertion: {time_taken:.6f} seconds")
-    
+    errors = client.insert_rows_json(table, event_data)    
     if errors:
-        print('Errors:', errors)
+        logger.error("There was some error seeding data", errors)
     else:
-        print(f'Inserted {len(event_data)} rows')
+        logger.info(f"Inserted {len(event_data)} rows")
 
 # Function to generate and insert events
 def generate_and_insert_events():

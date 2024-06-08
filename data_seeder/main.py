@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from apscheduler.schedulers.background import BackgroundScheduler
-from analytics_ww.data_seeder.utils import generate_and_insert_events
+from utils import generate_and_insert_events
 
 SCHEDULER_DURATION = 1
 
