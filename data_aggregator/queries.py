@@ -1,21 +1,13 @@
-from bigquery import config
-
-dataset_id = config['dataset_id']
-add_to_cart_table_id = ".".join(dataset_id, config['add_to_cart_table'])
-sessions_table_id = ".".join(dataset_id, config['sessions_table'])
-checkout_completed_table_id = ".".join(dataset_id, config['checkout_completed_table'])
-revenue_table_id = ".".join(dataset_id, config['revenue_table'])
-scroll_table_id = ".".join(dataset_id, config['scroll_values_table'])
-base_table_id = ".".join(dataset_id, config['base_table'])
+from config import dataset_id, base_table_id, checkout_completed_table_id, add_to_cart_table_id, sessions_table_id, revenue_table_id, scroll_table_id
 
 checkout_completed_query = f"""
 DECLARE last_processed_time TIMESTAMP;
 
 -- Get the last processed time for the 'checkout_completed_query'
-SET last_processed_time = (SELECT COALESCE(MAX(last_event_time), TIMESTAMP('1970-01-01')) FROM `{dataset_id}.metadata_table` WHERE query_name = 'checkout_completed_query');
+SET last_processed_time = (SELECT COALESCE(MAX(last_event_time), TIMESTAMP('1970-01-01')) FROM `{dataset_id}.metadata_table` WHERE query_name = 'checkout_events_query');
 
 -- Create or replace temporary table with new data, partitioned and clustered
-CREATE OR REPLACE TABLE `{dataset_id}.temp_aggregated_checkout_completed`
+CREATE OR REPLACE TABLE `{dataset_id}.temp_aggregated_checkout_events`
 PARTITION BY event_date
 CLUSTER BY page_url AS
 SELECT
@@ -43,18 +35,18 @@ CLUSTER BY page_url;
 
 -- Merge the new data with the existing data
 MERGE `{checkout_completed_table_id}` T
-USING `{dataset_id}.temp_aggregated_checkout_completed` S
+USING `{dataset_id}.temp_aggregated_checkout_events` S
 ON T.page_url = S.page_url AND T.event_date = S.event_date
 WHEN MATCHED THEN
-  UPDATE SET T.checkout_completed = T.checkout_completed + S.checkout_completed
+  UPDATE SET T.checkout_events = T.checkout_events + S.checkout_events
 WHEN NOT MATCHED THEN
-  INSERT (page_url, event_date, checkout_completed)
-  VALUES (S.page_url, S.event_date, S.checkout_completed);
+  INSERT (page_url, event_date, checkout_events)
+  VALUES (S.page_url, S.event_date, S.checkout_events);
 
 -- Update the last processed time in the metadata table
 UPDATE `{dataset_id}.metadata_table`
-SET last_event_time = (SELECT MAX(max_event_time) FROM `{dataset_id}.temp_aggregated_checkout_completed`)
-WHERE query_name = 'checkout_completed_query';
+SET last_event_time = (SELECT MAX(max_event_time) FROM `{dataset_id}.temp_aggregated_checkout_events`)
+WHERE query_name = 'checkout_events_query';
 """
 
 add_to_cart_query = f"""

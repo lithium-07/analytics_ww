@@ -51,7 +51,7 @@ def get_bigquery_metrics(request: MetricsRequest) -> MetricsResponse:
     SELECT
         a.page_url,
         SUM(c.add_to_cart_events) AS add_to_cart_events,
-        SUM(b.checkout_events) AS checkout_completed_events,
+        SUM(b.checkout_completed) AS checkout_completed_events,
         SUM(a.number_of_sessions) AS number_of_sessions,
         SUM(d.total_revenue) AS total_revenue,
         SUM(e.total_scroll_sum) AS total_scroll_sum, 

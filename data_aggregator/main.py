@@ -1,12 +1,18 @@
+import logging
 from fastapi import FastAPI
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
-from data_aggregator.bigquery import run_all_queries
+from bigquery import run_all_queries
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 app = FastAPI()
 
+INTERVAL = 1
+
 def schedule_queries():
     scheduler = AsyncIOScheduler()
-    scheduler.add_job(run_all_queries, 'interval', minutes=5)
+    scheduler.add_job(run_all_queries, 'interval', minutes=INTERVAL)
     scheduler.start()
 
 @app.on_event("startup")
