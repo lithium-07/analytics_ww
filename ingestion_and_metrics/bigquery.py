@@ -50,27 +50,27 @@ def get_bigquery_metrics(request: MetricsRequest) -> MetricsResponse:
     query = f"""
     SELECT
         a.page_url,
-        SUM(a.add_to_cart_events) AS add_to_cart_events,
-        SUM(b.checkout_completed_events) AS checkout_completed_events,
-        SUM(c.number_of_sessions) AS number_of_sessions,
+        SUM(c.add_to_cart_events) AS add_to_cart_events,
+        SUM(b.checkout_events) AS checkout_completed_events,
+        SUM(a.number_of_sessions) AS number_of_sessions,
         SUM(d.total_revenue) AS total_revenue,
         SUM(e.total_scroll_sum) AS total_scroll_sum, 
         SUM(e.total_events) AS total_scroll_events
     FROM
-        `{add_to_cart_table_id}` a
-    JOIN
+        `{sessions_table_id}` a
+    LEFT JOIN
         `{checkout_completed_table_id}` b
     ON
         a.page_url = b.page_url AND a.event_date = b.event_date
-    JOIN
-        `{sessions_table_id}` c
+    LEFT JOIN
+        `{add_to_cart_table_id}` c
     ON
         a.page_url = c.page_url AND a.event_date = c.event_date
-    JOIN
+    LEFT JOIN
         `{revenue_table_id}` d
     ON
         a.page_url = d.page_url AND a.event_date = d.event_date
-    JOIN
+    LEFT JOIN
         `{scroll_table_id}` e
     ON
         a.page_url = e.page_url AND a.event_date = e.event_date
@@ -98,7 +98,7 @@ def get_bigquery_metrics(request: MetricsRequest) -> MetricsResponse:
     total_scroll_events = result['total_scroll_events']
 
     cart_percentage = (add_to_cart_events / number_of_sessions) * 100 if number_of_sessions else 0
-    conversion_rate = (checkout_completed_events / add_to_cart_events) * 100 if add_to_cart_events else 0
+    conversion_rate = (checkout_completed_events / number_of_sessions) * 100 if add_to_cart_events else 0
     average_order_value = total_revenue / checkout_completed_events if checkout_completed_events else 0
     revenue_per_session = total_revenue / number_of_sessions if number_of_sessions else 0
     average_scroll_percentage = total_scroll_sum / total_scroll_events if total_scroll_events else 0
@@ -106,7 +106,7 @@ def get_bigquery_metrics(request: MetricsRequest) -> MetricsResponse:
     return MetricsResponse(
         page_url=page_url,
         cart_percentage=cart_percentage,
-        converstion_rate=conversion_rate, 
+        conversion_rate=conversion_rate, 
         average_order_value=average_order_value,
         revenue_per_session=revenue_per_session,
         total_sessions=number_of_sessions,

@@ -18,7 +18,7 @@ def run_query(query: str, client:  bigquery.Client):
 async def get_checkout_completed_events(page_url: str, start_date: str, end_date: str, client: bigquery.Client) -> int:
     try:
         query = f"""
-        SELECT SUM(checkout_completed_events) AS checkout_completed_events
+        SELECT SUM(checkout_completed) AS checkout_completed_events
         FROM `{checkout_completed_table_id}`
         WHERE page_url = '{page_url}' AND event_date BETWEEN '{start_date}' AND '{end_date}'
         """
